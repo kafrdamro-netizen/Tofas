@@ -1,354 +1,379 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة تعليمية</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+<title>منصة الاختبار</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:"Cairo",sans-serif;
-    background:linear-gradient(135deg,#0b1a2f,#0e2a52);
-    color:white;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma, Arial;
 }
 
-/* Navbar */
-.navbar{
+body{
+    background:#f2f4f8;
+}
+
+/* الشريط العلوي */
+.topbar{
+    background:#0b2347;
+    color:white;
+    padding:15px;
     display:flex;
     justify-content:space-between;
-    padding:15px 25px;
-    background:rgba(0,0,0,0.3);
-}
-.nav-links button{
-    margin-left:10px;
+    align-items:center;
+    flex-wrap:wrap;
 }
 
-/* Buttons */
-.btn{
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+.topbar .title{
+    font-size:24px;
+    font-weight:bold;
 }
-.primary{background:#4da3ff;color:white;}
-.outline{border:1px solid #4da3ff;background:none;color:#4da3ff;}
 
-/* Hero */
-.hero{text-align:center;padding:70px 20px;animation:fadeIn 1s;}
-.hero span{color:#4da3ff}
-.badge{background:#1b3c6b;padding:8px 15px;border-radius:20px;margin-bottom:10px;display:inline-block}
-
-/* Stats */
-.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:30px}
-.stat{background:#12294a;padding:20px;border-radius:12px;width:150px;text-align:center}
-
-/* Videos */
-.section{text-align:center;padding:40px}
-.videos{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
-.video{
-    background:#12294a;
-    padding:15px;
-    border-radius:15px;
-    width:320px;
-    transition:0.3s;
-}
-.video:hover{transform:scale(1.05)}
-iframe{width:100%;height:180px;border-radius:10px}
-
-/* Subscribe */
-.subscribe{
-    margin:40px auto;
-    width:90%;
-    max-width:500px;
-    background:#12294a;
-    padding:25px;
-    border-radius:15px;
-    text-align:center;
-}
-.price{font-size:40px;color:#4da3ff}
-
-/* Modal */
-.modal{
-    display:none;
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.7);
-    justify-content:center;
+.topbar .info{
+    display:flex;
+    gap:15px;
     align-items:center;
 }
-.modal-content{
-    background:#12294a;
+
+.btn{
+    background:#1f4fa3;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.btn:hover{
+    opacity:0.9;
+}
+
+/* تقسيم الصفحة */
+.container{
+    display:flex;
+    height:calc(100vh - 80px);
+}
+
+/* قائمة الأسئلة */
+.sidebar{
+    width:35%;
+    background:#ffffff;
+    padding:20px;
+    overflow-y:auto;
+    border-left:2px solid #ddd;
+}
+
+.sidebar h2{
+    margin-bottom:20px;
+}
+
+.question-item{
+    background:#f7f7f7;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    border:2px solid transparent;
+}
+
+.question-item:hover{
+    background:#e9eefc;
+}
+
+.question-item.active{
+    border-color:#1f4fa3;
+    background:#e6edff;
+}
+
+/* منطقة السؤال */
+.content{
+    flex:1;
+    padding:25px;
+    overflow-y:auto;
+}
+
+.question-box{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.question-title{
+    font-size:24px;
+    margin-bottom:20px;
+}
+
+.code-box{
+    background:#f4f4f4;
     padding:20px;
     border-radius:10px;
-    text-align:center;
-}
-input{
-    padding:10px;
-    margin:10px;
-    width:80%;
-    border-radius:8px;
-    border:none;
+    overflow:auto;
+    margin-bottom:20px;
+    direction:ltr;
+    text-align:left;
 }
 
-/* Animation */
-@keyframes fadeIn{
-    from{opacity:0;transform:translateY(20px)}
-    to{opacity:1;transform:translateY(0)}
+.answers{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.answer{
+    background:#f7f7f7;
+    padding:15px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    border:2px solid transparent;
+}
+
+.answer:hover{
+    background:#eef3ff;
+}
+
+.answer.selected{
+    border-color:#1f4fa3;
+    background:#dfe9ff;
+}
+
+/* موبايل */
+@media(max-width:900px){
+
+.container{
+    flex-direction:column;
+}
+
+.sidebar{
+    width:100%;
+    height:250px;
+    border-left:none;
+    border-top:2px solid #ddd;
+}
+
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-    <div class="nav-links">
-        <button class="btn outline" onclick="openLogin()">تسجيل دخول</button>
-        <button class="btn primary" onclick="scrollToSub()">اشترك الآن</button>
+<!-- الشريط العلوي -->
+<div class="topbar">
+
+    <div class="title">
+        منصة الاختبار
     </div>
-    <div> مستر مرعى أبو الفتوح:معلم خبير البرمجة والذكاء الاصطناعي 🎓</div>
-</div>
 
-<!-- Hero -->
-<div class="hero">
-    <div class="badge">الامتحان قريب - ابدأ الآن</div>
-    <h1>مراجعة شاملة <br><span>التوفاس 2025</span></h1>
-    <p>فيديوهات + تدريبات + شرح كامل</p>
-</div>
+    <div class="info">
+        <span>السؤال: <span id="currentQuestion">1</span></span>
+        <span>الوقت: <span id="timer">30:00</span></span>
 
-<!-- Stats -->
-<div class="stats">
-    <div class="stat"><h3>+10</h3><p>ساعات</p></div>
-    <div class="stat"><h3>200</h3><p>سؤال</p></div>
-    <div class="stat"><h3>10</h3><p>تدريبات</p></div>
-    <div class="stat"><h3>17</h3><p>فصل</p></div>
-</div>
+        <button class="btn" onclick="nextQuestion()">
+            التالي
+        </button>
 
-<!-- Videos -->
-<div class="section">
-    <h2>الفيديوهات</h2>
-
-    <div class="videos">
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 1</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 2</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>3 الفصل </h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل4</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 5</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 6</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 7</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 8</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 9</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 10</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل11</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 12</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 13</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 14</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 15</h4>
-        </div>
-<div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل16<h4>
-</div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل17/h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 18</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 19</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 20</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 21</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 22</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 23</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الففصل 24</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 25</h4>
-        </div>
-        
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/187VpOM-RcA" allowfullscreen></iframe>
-            <h4>الفصل26</h4>
-        </div>
-<div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 27</h4>
-</div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 28</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 29</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 30</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 31</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 32</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 33</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 34</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 35</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 36</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 37</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 38</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 39</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 40</h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 41/h4>
-        </div>
-        <div class="video">
-            <iframe src="https://www.youtube.com/embed/gylUNErmTB0" allowfullscreen></iframe>
-            <h4>الفصل 42</h4>
-        </div>
-        
-        
+        <button class="btn" onclick="finishExam()">
+            إنهاء الاختبار
+        </button>
     </div>
+
 </div>
 
-<!-- Subscribe -->
-<div class="subscribe" id="sub">
-    <h2>اشترك الآن</h2>
-    <p class="price">60 جنيه</p>
-    <p>اشتراك تجريبي</p>
+<div class="container">
 
-    <button class="btn primary" onclick="subscribe()">اشترك</button>
-</div>
+    <!-- قائمة الأسئلة -->
+    <div class="sidebar">
 
-<!-- Login Modal -->
-<div class="modal" id="loginBox">
-    <div class="modal-content">
-        <h3>تسجيل الدخول</h3>
-        <input type="text" placeholder="اسم المستخدم">
-        <input type="password" placeholder="كلمة المرور">
-        <br>
-        <button class="btn primary" onclick="login()">دخول</button>
-        <br><br>
-        <button onclick="closeLogin()">إغلاق</button>
+        <h2>قائمة الأسئلة</h2>
+
+        <div class="question-item active" onclick="loadQuestion(0,this)">
+            السؤال 1
+        </div>
+
+        <div class="question-item" onclick="loadQuestion(1,this)">
+            السؤال 2
+        </div>
+
+        <div class="question-item" onclick="loadQuestion(2,this)">
+            السؤال 3
+        </div>
+
     </div>
+
+    <!-- السؤال -->
+    <div class="content">
+
+        <div class="question-box">
+
+            <div class="question-title" id="questionText"></div>
+
+            <pre class="code-box" id="codeBox"></pre>
+
+            <div class="answers" id="answersBox"></div>
+
+        </div>
+
+    </div>
+
 </div>
+
 
 <script>
-function openLogin(){
-    document.getElementById("loginBox").style.display="flex";
-}
-function closeLogin(){
-    document.getElementById("loginBox").style.display="none";
+
+const questions = [
+
+{
+    question: "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
+
+    code:
+`let today = "الأربعاء";
+let specialSalesDay = "الخميس";
+
+if(today != specialSalesDay){
+   console.log("اليوم ليس يوم تخفيضات");
+}`,
+
+    answers: [
+        "لا يوجد إخراج",
+        "اليوم ليس يوم تخفيضات",
+        "اليوم يوم تخفيضات",
+        "تخفيضات فقط"
+    ]
+},
+
+{
+    question: "ما ناتج العملية التالية ؟",
+
+    code:
+`let x = 5;
+let y = 3;
+
+console.log(x + y);`,
+
+    answers: [
+        "53",
+        "8",
+        "15",
+        "خطأ"
+    ]
+},
+
+{
+    question: "ما نوع المتغير التالي ؟",
+
+    code:
+`let name = "Mostafa";`,
+
+    answers: [
+        "Number",
+        "Boolean",
+        "String",
+        "Array"
+    ]
 }
 
-function login(){
-    alert("تم تسجيل الدخول (تجريبي)");
-    closeLogin();
+];
+
+let current = 0;
+
+function loadQuestion(index, element){
+
+    current = index;
+
+    document.getElementById("currentQuestion").innerText = index + 1;
+
+    document.getElementById("questionText").innerText =
+    questions[index].question;
+
+    document.getElementById("codeBox").innerText =
+    questions[index].code;
+
+    let answersHTML = "";
+
+    questions[index].answers.forEach(answer => {
+
+        answersHTML += `
+        <div class="answer"
+        onclick="selectAnswer(this)">
+            ${answer}
+        </div>
+        `;
+
+    });
+
+    document.getElementById("answersBox").innerHTML =
+    answersHTML;
+
+    document.querySelectorAll(".question-item")
+    .forEach(q => q.classList.remove("active"));
+
+    element.classList.add("active");
 }
 
-function subscribe(){
-    alert("تم الاشتراك بنجاح 🎉");
+function selectAnswer(el){
+
+    document.querySelectorAll(".answer")
+    .forEach(a => a.classList.remove("selected"));
+
+    el.classList.add("selected");
+
 }
 
-function scrollToSub(){
-    document.getElementById("sub").scrollIntoView({behavior:"smooth"});
+function nextQuestion(){
+
+    if(current < questions.length - 1){
+
+        current++;
+
+        const items =
+        document.querySelectorAll(".question-item");
+
+        loadQuestion(current, items[current]);
+
+    }
+
 }
+
+function finishExam(){
+
+    alert("تم إنهاء الاختبار");
+
+}
+
+/* مؤقت */
+
+let seconds = 1800;
+
+setInterval(()=>{
+
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+
+    sec = sec < 10 ? "0"+sec : sec;
+
+    document.getElementById("timer").innerText =
+    `${min}:${sec}`;
+
+    if(seconds > 0){
+        seconds--;
+    }
+
+},1000);
+
+
+/* تحميل أول سؤال */
+loadQuestion(
+    0,
+    document.querySelector(".question-item")
+);
+
 </script>
 
 </body>

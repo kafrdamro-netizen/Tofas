@@ -1,30 +1,401 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>منصة الاختبار</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma;
+}
+
+body{
+    background:#f1f3f6;
+}
+
+/* الشريط العلوي */
+
+.topbar{
+
+    background:#0b2347;
+    color:white;
+
+    padding:15px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    flex-wrap:wrap;
+}
+
+.title{
+
+    font-size:24px;
+    font-weight:bold;
+
+}
+
+.info{
+
+    display:flex;
+    gap:15px;
+    align-items:center;
+
+}
+
+.btn{
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    background:#1e4ea1;
+    color:white;
+
+}
+
+.btn:hover{
+
+    opacity:0.9;
+
+}
+
+/* تقسيم الصفحة */
+
+.container{
+
+    display:flex;
+
+    height:calc(100vh - 80px);
+
+}
+
+/* قائمة الأسئلة */
+
+.sidebar{
+
+    width:30%;
+
+    background:white;
+
+    border-left:2px solid #ddd;
+
+    padding:20px;
+
+    overflow-y:auto;
+
+}
+
+.sidebar h2{
+
+    margin-bottom:20px;
+
+}
+
+.question-item{
+
+    background:#f7f7f7;
+
+    padding:15px;
+
+    margin-bottom:15px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    border:2px solid transparent;
+
+}
+
+.question-item:hover{
+
+    background:#e8efff;
+
+}
+
+.question-item.active{
+
+    background:#dfe8ff;
+
+    border-color:#1e4ea1;
+
+}
+
+/* منطقة السؤال */
+
+.content{
+
+    flex:1;
+
+    padding:20px;
+
+    overflow-y:auto;
+
+}
+
+.question-box{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+
+}
+
+.question-title{
+
+    font-size:25px;
+
+    margin-bottom:20px;
+
+}
+
+.code-box{
+
+    background:#f5f5f5;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
+
+    overflow:auto;
+
+    direction:ltr;
+
+    text-align:left;
+
+    font-size:18px;
+
+}
+
+.answers{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.answer{
+
+    background:#f7f7f7;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    border:2px solid transparent;
+
+}
+
+.answer:hover{
+
+    background:#edf2ff;
+
+}
+
+.answer.selected{
+
+    background:#dfe8ff;
+
+    border-color:#1e4ea1;
+
+}
+
+.answer pre{
+
+    white-space:pre-wrap;
+
+    direction:ltr;
+
+    text-align:left;
+
+    margin:0;
+
+}
+
+/* موبايل */
+
+@media(max-width:900px){
+
+.container{
+
+    flex-direction:column;
+
+}
+
+.sidebar{
+
+    width:100%;
+
+    height:250px;
+
+    border-left:none;
+
+    border-top:2px solid #ddd;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- الشريط العلوي -->
+
+<div class="topbar">
+
+    <div class="title">
+        منصة الاختبار
+    </div>
+
+    <div class="info">
+
+        <span>
+            السؤال:
+            <span id="currentQuestion">1</span>
+        </span>
+
+        <span>
+            الوقت:
+            <span id="timer">30:00</span>
+        </span>
+
+        <button class="btn" onclick="nextQuestion()">
+            التالي
+        </button>
+
+        <button class="btn" onclick="finishExam()">
+            إنهاء الاختبار
+        </button>
+
+    </div>
+
+</div>
+
+<!-- محتوى الصفحة -->
+
+<div class="container">
+
+    <!-- قائمة الأسئلة -->
+
+    <div class="sidebar">
+
+        <h2>
+            قائمة الأسئلة
+        </h2>
+
+        <div class="question-item active"
+        onclick="loadQuestion(0,this)">
+            السؤال 1
+        </div>
+
+        <div class="question-item"
+        onclick="loadQuestion(1,this)">
+            السؤال 2
+        </div>
+
+    </div>
+
+    <!-- السؤال -->
+
+    <div class="content">
+
+        <div class="question-box">
+
+            <div class="question-title"
+            id="questionText">
+            </div>
+
+            <pre class="code-box"
+            id="codeBox">
+            </pre>
+
+            <div class="answers"
+            id="answersBox">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
+
+/* الأسئلة */
 
 const questions = [
 
 {
-    question: "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
+
+    question:
+    "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
 
     code:
+
 `let today = "الأربعاء";
 let specialSalesDay = "الخميس";
 
 if(today != specialSalesDay){
+
    console.log("اليوم ليس يوم تخفيضات");
+
 }`,
 
     answers: [
+
         "لا يوجد إخراج",
+
         "اليوم ليس يوم تخفيضات",
+
         "اليوم يوم تخفيضات",
+
         "تخفيضات فقط"
+
     ]
+
 },
 
 {
-    question: "حدد البرنامج الذي يقوم بإخراج ما يلي:",
 
-    code: `لا يمكنك الركوب`,
+    question:
+    "حدد البرنامج الذي يقوم بإخراج ما يلي:",
+
+    code:
+`لا يمكنك الركوب`,
 
     answers: [
 
@@ -32,89 +403,152 @@ if(today != specialSalesDay){
 let weight = 110;
 
 if ((height >= 100) || (weight <= 100)) {
+
    console.log("يمكنك الركوب");
+
 } else {
+
    console.log("لا يمكنك الركوب");
+
 }`,
 
 `let height = 180;
 let weight = 110;
 
 if ((height >= 100) && (weight <= 100)) {
+
    console.log("يمكنك الركوب");
+
 } else {
+
    console.log("لا يمكنك الركوب");
+
 }`,
 
 `let height = 180;
 let weight = 110;
 
 if ((height < 100) && (weight <= 100)) {
+
    console.log("يمكنك الركوب");
+
 } else {
+
    console.log("لا يمكنك الركوب");
+
 }`,
 
 `let height = 180;
 let weight = 110;
 
 if ((height < 100) || (weight < 100)) {
+
    console.log("يمكنك الركوب");
+
 } else {
+
    console.log("لا يمكنك الركوب");
+
 }`
 
     ]
+
 }
 
 ];
 
+
+/* السؤال الحالي */
+
 let current = 0;
+
+
+/* تحميل السؤال */
 
 function loadQuestion(index, element){
 
     current = index;
 
-    document.getElementById("currentQuestion").innerText = index + 1;
+    document.getElementById(
+    "currentQuestion"
+    ).innerText = index + 1;
 
-    document.getElementById("questionText").innerText =
+    document.getElementById(
+    "questionText"
+    ).innerText =
     questions[index].question;
 
-    document.getElementById("codeBox").innerText =
+    document.getElementById(
+    "codeBox"
+    ).innerText =
     questions[index].code;
 
     let answersHTML = "";
 
-    questions[index].answers.forEach(answer => {
+    questions[index].answers
+    .forEach(answer => {
 
         answersHTML += `
-        <div class="answer" onclick="selectAnswer(this)">
+
+        <div class="answer"
+        onclick="selectAnswer(this)">
+
             <pre>${answer}</pre>
+
         </div>
+
         `;
 
     });
 
-    document.getElementById("answersBox").innerHTML =
+    document.getElementById(
+    "answersBox"
+    ).innerHTML =
     answersHTML;
 
-    document.querySelectorAll(".question-item")
-    .forEach(q => q.classList.remove("active"));
+    document.querySelectorAll(
+    ".question-item"
+    ).forEach(item => {
+
+        item.classList.remove(
+        "active"
+        );
+
+    });
 
     if(element){
-        element.classList.add("active");
+
+        element.classList.add(
+        "active"
+        );
+
     }
 
 }
 
+
+/* تحديد الإجابة */
+
 function selectAnswer(el){
 
-    document.querySelectorAll(".answer")
-    .forEach(a => a.classList.remove("selected"));
+    document.querySelectorAll(
+    ".answer"
+    ).forEach(answer => {
 
-    el.classList.add("selected");
+        answer.classList.remove(
+        "selected"
+        );
+
+    });
+
+    el.classList.add(
+    "selected"
+    );
 
 }
+
+
+/* السؤال التالي */
 
 function nextQuestion(){
 
@@ -123,19 +557,30 @@ function nextQuestion(){
         current++;
 
         const items =
-        document.querySelectorAll(".question-item");
+        document.querySelectorAll(
+        ".question-item"
+        );
 
-        loadQuestion(current, items[current]);
+        loadQuestion(
+            current,
+            items[current]
+        );
 
     }
 
 }
 
+
+/* إنهاء الاختبار */
+
 function finishExam(){
 
-    alert("تم إنهاء الاختبار");
+    alert(
+    "تم إنهاء الاختبار"
+    );
 
 }
+
 
 /* المؤقت */
 
@@ -143,16 +588,26 @@ let seconds = 1800;
 
 setInterval(() => {
 
-    let min = Math.floor(seconds / 60);
-    let sec = seconds % 60;
+    let min =
+    Math.floor(seconds / 60);
 
-    sec = sec < 10 ? "0" + sec : sec;
+    let sec =
+    seconds % 60;
 
-    document.getElementById("timer").innerText =
+    sec =
+    sec < 10 ?
+    "0" + sec :
+    sec;
+
+    document.getElementById(
+    "timer"
+    ).innerText =
     `${min}:${sec}`;
 
     if(seconds > 0){
+
         seconds--;
+
     }
 
 }, 1000);
@@ -163,8 +618,13 @@ setInterval(() => {
 window.onload = function(){
 
     loadQuestion(
+
         0,
-        document.querySelector(".question-item")
+
+        document.querySelector(
+        ".question-item"
+        )
+
     );
 
 };
@@ -172,4 +632,5 @@ window.onload = function(){
 </script>
 
 </body>
+
 </html>

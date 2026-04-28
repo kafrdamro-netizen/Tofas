@@ -278,7 +278,52 @@ console.log(x + y);`,
         "Array"
     ]
 }
+{
+    question: "حدد البرنامج الذي يقوم بإخراج ما يلي:",
 
+    code:
+`لا يمكنك الركوب`,
+
+    answers: [
+
+`let height = 180;
+let weight = 110;
+
+if ((height >= 100) || (weight <= 100)) {
+   console.log("يمكنك الركوب");
+} else {
+   console.log("لا يمكنك الركوب");
+}`,
+
+`let height = 180;
+let weight = 110;
+
+if ((height >= 100) && (weight <= 100)) {
+   console.log("يمكنك الركوب");
+} else {
+   console.log("لا يمكنك الركوب");
+}`,
+
+`let height = 180;
+let weight = 110;
+
+if ((height < 100) && (weight <= 100)) {
+   console.log("يمكنك الركوب");
+} else {
+   console.log("لا يمكنك الركوب");
+}`,
+
+`let height = 180;
+let weight = 110;
+
+if ((height < 100) || (weight < 100)) {
+   console.log("يمكنك الركوب");
+} else {
+   console.log("لا يمكنك الركوب");
+}`
+
+    ]
+}
 ];
 
 let current = 0;

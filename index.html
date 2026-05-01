@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الاختبار المحدثة - بنظام الدرجات</title>
+<title>منصة الاختبار البرمجية الشاملة</title>
 
 <style>
 *{
@@ -17,7 +17,6 @@ body{
     background:#f2f4f8;
 }
 
-/* الشريط العلوي */
 .topbar{
     background:#0b2347;
     color:white;
@@ -51,23 +50,17 @@ body{
     border-radius:10px;
     cursor:pointer;
     font-size:16px;
+    transition: 0.3s;
 }
 
-.btn-finish {
-    background: #d9534f;
-}
+.btn-finish { background: #d9534f; }
+.btn:hover{ opacity:0.8; transform: translateY(-2px); }
 
-.btn:hover{
-    opacity:0.9;
-}
-
-/* تقسيم الصفحة */
 .container{
     display:flex;
     height:calc(100vh - 80px);
 }
 
-/* قائمة الأسئلة */
 .sidebar{
     width:25%;
     background:#ffffff;
@@ -78,7 +71,8 @@ body{
 
 .sidebar h2{
     margin-bottom:20px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    color: #333;
 }
 
 .question-item{
@@ -103,7 +97,6 @@ body{
     background:#e6edff;
 }
 
-/* منطقة السؤال */
 .content{
     flex:1;
     padding:25px;
@@ -114,25 +107,26 @@ body{
     background:white;
     border-radius:15px;
     padding:25px;
-    box-shadow:0 0 15px rgba(0,0,0,0.05);
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
 }
 
 .question-title{
-    font-size:20px;
+    font-size:19px;
     margin-bottom:20px;
-    line-height:1.6;
+    line-height:1.7;
+    color: #2c3e50;
 }
 
 .code-box{
-    background:#2d2d2d;
-    color: #f8f8f2;
+    background:#1e1e1e;
+    color: #dcdcdc;
     padding:20px;
     border-radius:10px;
     overflow:auto;
     margin-bottom:20px;
     direction:ltr;
     text-align:left;
-    font-family:'Courier New', Courier, monospace;
+    font-family:'Consolas', 'Monaco', monospace;
     border-left:5px solid #1f4fa3;
     white-space:pre-wrap;
 }
@@ -140,11 +134,11 @@ body{
 .answers{
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
 }
 
 .answer{
-    background:#f7f7f7;
+    background:#f9f9f9;
     padding:15px;
     border-radius:12px;
     cursor:pointer;
@@ -155,7 +149,7 @@ body{
 }
 
 .answer:hover{
-    background:#eef3ff;
+    background:#f0f4ff;
     border-color: #1f4fa3;
 }
 
@@ -165,9 +159,18 @@ body{
     font-weight: bold;
 }
 
+.note-box {
+    background: #fff3cd;
+    border-right: 5px solid #ffc107;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
 @media(max-width:900px){
     .container{ flex-direction:column; }
-    .sidebar{ width:100%; height:150px; border-left:none; border-top:2px solid #ddd; }
+    .sidebar{ width:100%; height:180px; border-left:none; border-top:2px solid #ddd; }
 }
 </style>
 </head>
@@ -177,21 +180,22 @@ body{
 <div class="topbar">
     <div class="title">اختبار البرمجة الذكي</div>
     <div class="info">
-        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">0</span></span>
+        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">14</span></span>
         <span>الوقت: <span id="timer">30:00</span></span>
-        <button class="btn" onclick="nextQuestion()">التالي</button>
-        <button class="btn btn-finish" onclick="finishExam()">إنهاء الاختبار</button>
+        <button class="btn" onclick="nextQuestion()">السؤال التالي</button>
+        <button class="btn btn-finish" onclick="finishExam()">إنهاء وإظهار النتيجة</button>
     </div>
 </div>
 
 <div class="container">
     <div class="sidebar">
-        <h2>حالة الأسئلة</h2>
+        <h2>قائمة الأسئلة</h2>
         <div id="questionsList"></div>
     </div>
 
     <div class="content">
         <div id="quizArea" class="question-box">
+            <div id="noteArea"></div>
             <div class="question-title" id="questionText"></div>
             <pre class="code-box" id="codeBox"></pre>
             <div class="answers" id="answersBox"></div>
@@ -200,85 +204,140 @@ body{
 </div>
 
 <script>
-// مصفوفة الأسئلة مع تحديد الإجابة الصحيحة (المؤشر يبدأ من 0)
 const questions = [
     {
-        question:"حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
-        code:`let today = "الأربعاء";
-let specialSalesDay = "الخميس";
-if (today != specialSalesDay) {
-  console.log("اليوم ليس يوم تخفيضات");
-}`,
-        answers:["لا يوجد إخراج", "اليوم ليس يوم تخفيضات", "اليوم يوم تخفيضات", "يوم تخفيضات"],
+        question: "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
+        code: `let today = "الأربعاء";\nlet specialSalesDay = "الخميس";\nif (today != specialSalesDay) {\n  console.log("اليوم ليس يوم تخفيضات");\n}`,
+        answers: ["لا يوجد إخراج", "اليوم ليس يوم تخفيضات", "اليوم يوم تخفيضات", "يوم تخفيضات"],
         correct: 1
     },
     {
-        question:"حدد البرنامج الذي يقوم بإخراج: لا يمكنك الركوب",
-        code:"",
-        answers:[
-`let height = 180; let weight = 110;
-if ((height >= 100) || (weight <= 100)) { console.log("يمكنك الركوب"); } 
-else { console.log("لا يمكنك الركوب"); }`,
-`let height = 180; let weight = 110;
-if ((height >= 100) && (weight <= 100)) { console.log("يمكنك الركوب"); } 
-else { console.log("لا يمكنك الركوب"); }`,
-`let height = 180; let weight = 110;
-if ((height < 100) || (weight > 100)) { console.log("يمكنك الركوب"); } 
-else { console.log("لا يمكنك الركوب"); }`,
-`let height = 180; let weight = 110;
-if ((height < 100) && (weight > 100)) { console.log("يمكنك الركوب"); } 
-else { console.log("لا يمكنك الركوب"); }`
+        question: "حدد البرنامج الذي يقوم بإخراج: لا يمكنك الركوب",
+        answers: [
+            "let h=180, w=110; if((h>=100)||(w<=100)) { console.log('يمكنك الركوب'); } else { console.log('لا يمكنك الركوب'); }",
+            "let h=180, w=110; if((h>=100)&&(w<=100)) { console.log('يمكنك الركوب'); } else { console.log('لا يمكنك الركوب'); }",
+            "let h=180, w=110; if((h<100)||(w>100)) { console.log('يمكنك الركوب'); } else { console.log('لا يمكنك الركوب'); }",
+            "let h=180, w=110; if((h<100)&&(w>100)) { console.log('يمكنك الركوب'); } else { console.log('لا يمكنك الركوب'); }"
         ],
         correct: 1
     },
     {
         question: "حدد البرنامج الذي يقوم بإخراج: حاصل الجمع هو 15",
-        code: "",
         answers: [
-`let x = "10"; let y = 5;
-console.log("حاصل الجمع هو " + (x + y));`,
-`let x = 10; let y = 5;
-console.log("حاصل الجمع هو " + x + y);`,
-`let x = 10; let y = 5;
-console.log("حاصل الجمع هو " + (x + y));`,
-`let x = 10; let y = 5;
-if (x = y) { console.log("حاصل الجمع هو 15"); }`
+            "let x='10', y=5; console.log('حاصل الجمع هو ' + (x+y));",
+            "let x=10, y=5; console.log('حاصل الجمع هو ' + x + y);",
+            "let x=10, y=5; console.log('حاصل الجمع هو ' + (x+y));",
+            "let x=10, y=5; if(x=y){ console.log('حاصل الجمع هو 15'); }"
         ],
         correct: 2
     },
     {
         question: "ما هي القيمة التي ستظهر في القنصل بعد تنفيذ الكود التالي؟",
-        code: `let colors = ["أحمر", "أخضر", "أزرق"];
-colors.push("أصفر");
-console.log(colors.length);`,
+        code: `let colors = ["أحمر", "أخضر", "أزرق"];\ncolors.push("أصفر");\nconsole.log(colors.length);`,
         answers: ["2", "3", "4", "أصفر"],
         correct: 2
     },
     {
         question: "أي من البرامج التالية يقوم بطباعة الأرقام من 1 إلى 3؟",
-        code: "",
         answers: [
-`for (let i = 1; i <= 3; i++) {
-  console.log(i);
-}`,
-`for (let i = 1; i < 3; i++) {
-  console.log(i);
-}`,
-`let i = 1;
-if (i <= 3) {
-  console.log(i);
-}`,
-`for (let i = 3; i > 0; i--) {
-  console.log(i);
-}`
+            "for (let i = 1; i <= 3; i++) { console.log(i); }",
+            "for (let i = 1; i < 3; i++) { console.log(i); }",
+            "let i = 1; if (i <= 3) { console.log(i); }",
+            "for (let i = 3; i > 0; i--) { console.log(i); }"
         ],
         correct: 0
+    },
+    {
+        question: "حدد النتيجة النهائية لهذا الكود:",
+        code: `let score = 85;\nif (score >= 90) { console.log("امتياز"); }\nelse if (score >= 80) { console.log("جيد جداً"); }\nelse { console.log("ناجح"); }`,
+        answers: ["امتياز", "جيد جداً", "ناجح", "لا يوجد إخراج"],
+        correct: 1
+    },
+    {
+        note: "في المصفوفات التي تحتوي عناصر مكتوبة بالعربية: يكون ترتيب العناصر من اليمين إلى اليسار، لذلك أول عنصر في المصفوفة يكون في أقصى اليمين.",
+        question: "حدد البرنامج الذي يقوم بإخراج: مساء الخير ، صباح الخير",
+        answers: [
+            "let greetingList = ['مساء الخير', 'صباح الخير']; if (let i = 0; i < 2; i++) { console.log(greetingList[i]); }",
+            "let greetingList = ['مساء الخير', 'صباح الخير']; for (let i = 0; i < 2; i++) { console.log(greetingList[i]); }",
+            "let greetingList = ['مساء الخير', 'صباح الخير']; for { console.log(greetingList[i]); }",
+            "let greetingList = ['مساء الخير', 'صباح الخير']; for (let i = 0; i < greetingList; i++) { console.log(greetingList[i]); }"
+        ],
+        correct: 1
+    },
+    {
+        note: "في المصفوفات التي تحتوي عناصر مكتوبة بالعربية: يكون ترتيب العناصر من اليمين إلى اليسار.",
+        question: "حدد البرنامج الذي يقوم بإخراج: الباندا من الثدييات ، الدلفين من الثدييات",
+        answers: [
+            "let animals = ['الباندا', 'البطريق', 'الدلفين']; if (let i = 0; i < 3; i++) { if (animals[i] != 'البطريق') { console.log(animals[i] + ' من الثدييات'); } }",
+            "let animals = ['الباندا', 'البطريق', 'الدلفين']; for (let i = 0; i < 3; i++) { if (animals[i] == 'البطريق') { console.log(animals[i] + ' من الثدييات'); } }",
+            "let animals = ['الباندا', 'البطريق', 'الدلفين']; if (let i = 0; i < 3; i++) { if (animals[i] == 'البطريق') { console.log(animals[i] + ' من الثدييات'); } }",
+            "let animals = ['الباندا', 'البطريق', 'الدلفين']; for (let i = 0; i < 3; i++) { if (animals[i] != 'البطريق') { console.log(animals[i] + ' من الثدييات'); } }"
+        ],
+        correct: 3
+    },
+    {
+        note: "في المصفوفات العربية: أول عنصر يكون في أقصى اليمين.",
+        question: "حدد البرنامج الذي يقوم بإخراج قائمة سأذهب إلى (فرنسا، الصين، كوريا، اليابان) بالترتيب:",
+        answers: [
+            "let countries = ['فرنسا', 'الصين', 'كوريا الجنوبية', 'اليابان']; for (let i = 0; i < countries.length; i++) { console.log('سأذهب إلى ' + countries[i]); }",
+            "let countries = [ 'كوريا', 'الصين' ], [ 'فرنسا' ] , [ 'اليابان' ]; for (let i = 0; i < countries.length; i++) { console.log('سأذهب إلى ' + countries[i]); }",
+            "let countries = ['فرنسا', 'الصين', 'كوريا الجنوبية', 'اليابان']; if (let i = 0; i < countries.length; i++) { console.log('سأذهب إلى ' + countries[i]); }",
+            "let countries = ['فرنسا', 'الصين', 'كوريا الجنوبية', 'اليابان']; for (let i = 1; i < countries.length; i++) { console.log('سأذهب إلى ' + countries[i]); }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الذي يطبع جميع المحطات ثم يطبع 'تم الوصول إلى المحطة الأخيرة' مرة واحدة في النهاية:",
+        answers: [
+            "let stations = ['محطة أ', 'محطة ب', 'محطة ج', 'محطة د']; for (let i = 0; i < stations.length; i++) { console.log('تم الوصول إلى ' + stations[i]); } console.log('تم الوصول إلى المحطة الأخيرة');",
+            "let stations = ['محطة أ', 'محطة ب', 'محطة ج', 'محطة د']; for (let i = 0; i < stations.length; i++) { console.log('تم الوصول إلى ' + stations[i]); console.log('تم الوصول إلى المحطة الأخيرة'); }",
+            "let stations = ['محطة أ', 'محطة ب', 'محطة ج', 'محطة د']; if (let i = 0; i < stations.length; i++) { console.log('تم الوصول إلى ' + stations[i]); } console.log('تم الوصول إلى المحطة الأخيرة');",
+            "let stations = ['محطة أ', 'محطة ب', 'محطة ج', 'محطة د']; if (let i = 0; i < stations.length; i++) { console.log('تم الوصول إلى ' + stations[i]); console.log('تم الوصول إلى المحطة الأخيرة'); }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الذي يتخطى 'بيتزا' ويطبع بقية الأصناف المتوفرة:",
+        answers: [
+            "let menuList = ['دجاج مقلي', 'بيتزا', 'برغر الدجاج', 'بطاطس مقلية']; let soldOut = 'بيتزا'; for(let i=0; i<menuList.length; i++){ if(menuList[i] != soldOut){ console.log(menuList[i]+' متوفرة'); } }",
+            "let menuList = ['دجاج مقلي', 'بيتزا', 'برغر الدجاج', 'بطاطس مقلية']; let soldOut = 'بيتزا'; for(let i=0; i<menuList.length; i++){ if(menuList[i] == soldOut){ console.log(menuList[i]+' متوفرة'); } }",
+            "let menuList = ['بطاطس مقلية', 'برغر الدجاج', 'بيتزا', 'دجاج مقلي']; let soldOut = 'بيتزا'; for(let i=0; i<menuList.length; i++){ if(menuList[i] != soldOut){ console.log(menuList[i]+' متوفرة'); } }",
+            "let menuList = ['بطاطس مقلية', 'برغر الدجاج', 'بيتزا', 'دجاج مقلي']; let soldOut = 'بيتزا'; for(let i=0; i<menuList.length; i++){ if(menuList[i] == soldOut){ console.log(menuList[i]+' متوفرة'); } }"
+        ],
+        correct: 2
+    },
+    {
+        question: "حدد البرنامج الذي يطبع 'سأطلب باستا' و 'سأطلب بطاطس مقلية' فقط:",
+        answers: [
+            "let menuList = ['بطاطس مقلية', 'برجر الدجاج', 'باستا', 'بيتزا']; for(let i=0; i<4; i++){ if(menuList[i] !== 'بيتزا' && menuList[i] !== 'برجر الدجاج'){ console.log('سأطلب ' + menuList[i]); } }",
+            "let menuList = ['بيتزا', 'باستا', 'برجر الدجاج', 'بطاطس مقلية']; for(let i=0; i<4; i++){ if(menuList[i] == 'بيتزا' || menuList[i] == 'برجر الدجاج'){ console.log('سأطلب ' + menuList[i]); } }",
+            "let menuList = ['بيتزا', 'باستا', 'برجر الدجاج', 'بطاطس مقلية']; for(let i=0; i<4; i++){ if(menuList[i] == 'بيتزا' && menuList[i] == 'برجر الدجاج'){ console.log('سأطلب ' + menuList[i]); } }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الذي يطبع أسماء الحاضرات فقط (باستثناء ريكا):",
+        answers: [
+            "let group = ['ماي', 'كيكو', 'يوكي', 'ريكا']; let abs = 'ريكا'; for(let i=0; i<group.length; i++){ if(!(group[i] == abs)){ console.log(group[i] + ' حاضرة'); } }",
+            "let group = [['ماي'], ['كيكو'], ['يوكي'], ['ريكا']]; let abs = 'ريكا'; for(let i=0; i<group.length; i++){ if(group[i] == abs){ console.log(group[i] + ' حاضرة'); } }",
+            "let group = ['ماي', 'كيكو', 'يوكي', 'ريكا']; let abs = 'ريكا'; for(let i=0; i<group.length; i++){ if(group[i] == abs){ console.log(group[i] + ' حاضرة'); } }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الصحيح لطباعة قائمة الإفطار بالكامل:",
+        answers: [
+            "let breakfastList = ['بيض', 'موز', 'خبز', 'شوربة البصل']; console.log('القائمة:'); else (let i=0; i<4; i++){ console.log(breakfastList[i]); }",
+            "let breakfastList = ['بيض', 'موز', 'خبز', 'شوربة البصل']; console.log('القائمة:'); for (let i=0; i<4; i++){ console.log(breakfastList[i]); }",
+            "let breakfastList = ['شوربة البصل', 'خبز', 'موز', 'بيض']; console.log('القائمة:'); for (let i=0; i<4; i++){ console.log(breakfastList[i]); }",
+            "let breakfastList = ['شوربة البصل', 'خبز', 'موز', 'بيض']; console.log('القائمة:'); else (let i=0; i<4; i++){ console.log(breakfastList[i]); }"
+        ],
+        correct: 1
     }
-    // يمكنك إضافة بقية الأسئلة هنا بنفس النمط
 ];
 
 let current = 0;
-let userAnswers = new Array(questions.length).fill(null); // لتخزين إجابات المستخدم
+let userAnswers = new Array(questions.length).fill(null);
 
 function renderSidebar(){
     const list = document.getElementById("questionsList");
@@ -294,13 +353,23 @@ function renderSidebar(){
 
 function loadQuestion(index){
     current = index;
+    const q = questions[index];
+    
     document.getElementById("currentQuestionNum").innerText = index + 1;
     document.getElementById("totalQuestionsNum").innerText = questions.length;
-    document.getElementById("questionText").innerText = questions[index].question;
+    document.getElementById("questionText").innerText = q.question;
     
+    // عرض الملاحظة التقنية إن وجدت
+    const noteArea = document.getElementById("noteArea");
+    if(q.note) {
+        noteArea.innerHTML = `<div class="note-box"><strong>ملاحظة:</strong> ${q.note}</div>`;
+    } else {
+        noteArea.innerHTML = "";
+    }
+
     const codeBox = document.getElementById("codeBox");
-    if(questions[index].code) {
-        codeBox.innerText = questions[index].code;
+    if(q.code) {
+        codeBox.innerText = q.code;
         codeBox.style.display = "block";
     } else {
         codeBox.style.display = "none";
@@ -309,13 +378,13 @@ function loadQuestion(index){
     const answersBox = document.getElementById("answersBox");
     answersBox.innerHTML = "";
 
-    questions[index].answers.forEach((answer, i) => {
+    q.answers.forEach((ans, i) => {
         const div = document.createElement("div");
         div.className = `answer ${userAnswers[current] === i ? "selected" : ""}`;
-        div.innerText = answer;
+        div.innerText = ans;
         div.onclick = function(){
             userAnswers[current] = i;
-            loadQuestion(current); // إعادة التحميل لتحديث حالة الاختيار
+            loadQuestion(current);
         };
         answersBox.appendChild(div);
     });
@@ -324,31 +393,35 @@ function loadQuestion(index){
 
 function nextQuestion(){
     if(current < questions.length - 1) loadQuestion(current + 1);
-    else alert("هذا هو السؤال الأخير.");
+    else alert("لقد وصلت لنهاية الأسئلة، اضغط 'إنهاء' لرؤية النتيجة.");
 }
 
 function finishExam(){
-    if(confirm("هل أنت متأكد من إنهاء الاختبار؟")){
+    let unanswered = userAnswers.filter(a => a === null).length;
+    let msg = unanswered > 0 ? `لديك ${unanswered} سؤال لم تجب عليه. هل تريد الإنهاء؟` : "هل أنت متأكد من إنهاء الاختبار؟";
+    
+    if(confirm(msg)){
         let score = 0;
         userAnswers.forEach((ans, index) => {
             if(ans === questions[index].correct) score++;
         });
 
         const quizArea = document.getElementById("quizArea");
+        const percent = Math.round((score/questions.length)*100);
+        
         quizArea.innerHTML = `
             <div style="text-align:center; padding: 40px;">
-                <h1 style="color:#1f4fa3; font-size:48px;">النتيجة النهائية</h1>
-                <p style="font-size:24px; margin:20px 0;">لقد حصلت على <strong>${score}</strong> من <strong>${questions.length}</strong></p>
-                <div style="font-size:60px;">${(score/questions.length >= 0.5) ? '🥳' : '😐'}</div>
-                <button class="btn" style="margin-top:30px;" onclick="location.reload()">إعادة الاختبار</button>
+                <h1 style="color:#1f4fa3; font-size:36px;">انتهى الاختبار</h1>
+                <div style="font-size:80px; margin:20px 0;">${percent >= 50 ? '🏆' : '📚'}</div>
+                <p style="font-size:24px;">نتيجتك هي: <strong>${score}</strong> من <strong>${questions.length}</strong></p>
+                <p style="font-size:20px; color:#666;">النسبة المئوية: ${percent}%</p>
+                <button class="btn" style="margin-top:30px; padding:15px 40px;" onclick="location.reload()">إعادة المحاولة</button>
             </div>
         `;
-        // إيقاف المؤقت
         clearInterval(timerInterval);
     }
 }
 
-// نظام الوقت
 let seconds = 1800;
 const timerInterval = setInterval(()=>{
     let min = Math.floor(seconds / 60);
@@ -356,7 +429,6 @@ const timerInterval = setInterval(()=>{
     document.getElementById("timer").innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
     if(seconds <= 0) {
         clearInterval(timerInterval);
-        alert("انتهى الوقت!");
         finishExam();
     }
     seconds--;

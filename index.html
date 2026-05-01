@@ -180,7 +180,7 @@ body{
 <div class="topbar">
     <div class="title">اختبار البرمجة الذكي</div>
     <div class="info">
-        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">14</span></span>
+        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">19</span></span>
         <span>الوقت: <span id="timer">30:00</span></span>
         <button class="btn" onclick="nextQuestion()">السؤال التالي</button>
         <button class="btn btn-finish" onclick="finishExam()">إنهاء وإظهار النتيجة</button>
@@ -333,6 +333,55 @@ const questions = [
             "let breakfastList = ['شوربة البصل', 'خبز', 'موز', 'بيض']; console.log('القائمة:'); else (let i=0; i<4; i++){ console.log(breakfastList[i]); }"
         ],
         correct: 1
+    },
+    {
+        question: "حدد البرنامج الذي يقوم بإخراج: لدي محفظة",
+        answers: [
+            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[1]);",
+            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[2]);",
+            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList);",
+            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[3]);"
+        ],
+        correct: 1
+    },
+    {
+        note: "في المصفوفات العربية: يكون ترتيب العناصر من اليمين إلى اليسار، أول عنصر في أقصى اليمين.",
+        question: "حدد البرنامج الذي يقوم بإخراج: لون التفاح أحمر ، لون الفراولة أحمر",
+        answers: [
+            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits != nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }",
+            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits[i] == nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }",
+            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits[i] != nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }"
+        ],
+        correct: 2
+    },
+    {
+        question: "حدد البرنامج الذي يخرج التحقق من دول أفريقيا (كينيا ومصر دول أفريقية):",
+        answers: [
+            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries == af) || (countries == af)){ console.log(countries[i]+' دول أفريقية'); } }",
+            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries[i] == af[0]) && (countries[i] == af[1])){ console.log(countries[i]+' دولة أفريقية'); } }",
+            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries[i] == af[0]) || (countries[i] == af[1])){ console.log(countries[i]+' دولة أفريقية'); } else { console.log(countries[i]+' ليست أفريقية'); } }"
+        ],
+        correct: 2
+    },
+    {
+        question: "حدد البرنامج الذي يطبع القائمة باستثناء 'سوشي':",
+        answers: [
+            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(menu == 'سوشي'){ console.log(menu[i]); } }",
+            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(!(menu[i] == 'سوشي')){ console.log(menu[i]); } }",
+            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(menu[i] == 'سوشي'){ console.log(menu[i]); } }",
+            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(!(menu == 'سوشي')){ console.log(menu[i]); } }"
+        ],
+        correct: 1
+    },
+    {
+        question: "حدد البرنامج الذي يطبع 'سأشتري' متبوعاً بكل صنف من الخضروات:",
+        answers: [
+            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg; i++){ console.log('سأشتري '+veg[i]); }",
+            "let veg = ['الملفوف', 'الطماطم', 'الخس']; if(let i=0; i<veg; i++){ console.log('سأشتري '+veg[i]); }",
+            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg.length; i++){ console.log('سأشتري '+veg[i]); }",
+            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg.length; i++){ console.log('سأشتري '+veg); }"
+        ],
+        correct: 2
     }
 ];
 
@@ -359,7 +408,6 @@ function loadQuestion(index){
     document.getElementById("totalQuestionsNum").innerText = questions.length;
     document.getElementById("questionText").innerText = q.question;
     
-    // عرض الملاحظة التقنية إن وجدت
     const noteArea = document.getElementById("noteArea");
     if(q.note) {
         noteArea.innerHTML = `<div class="note-box"><strong>ملاحظة:</strong> ${q.note}</div>`;

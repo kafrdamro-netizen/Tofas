@@ -204,7 +204,8 @@ body{
 </div>
 
 <script>
-const questions = [
+          const questions = [
+    // ... الأسئلة الـ 14 السابقة التي كانت لديك تظل كما هي ...
     {
         question: "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
         code: `let today = "الأربعاء";\nlet specialSalesDay = "الخميس";\nif (today != specialSalesDay) {\n  console.log("اليوم ليس يوم تخفيضات");\n}`,
@@ -334,156 +335,65 @@ const questions = [
         ],
         correct: 1
     },
+
+    // --- الأسئلة الجديدة التي أضفتها أنت ---
+
     {
-        question: "حدد البرنامج الذي يقوم بإخراج: لدي محفظة",
+        question: "حدد البرنامج الذي يقوم بإخراج جملة خاصة بحصة التربية البدنية فقط عند هطول المطر:",
         answers: [
-            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[1]);",
-            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[2]);",
-            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList);",
-            "let itemList = ['ساعة يد', 'هاتف ذكي', 'محفظة']; console.log('لدي ' + itemList[3]);"
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') || (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }",
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') && (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }",
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'مشمس'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') && (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }"
         ],
         correct: 1
     },
     {
-        note: "في المصفوفات العربية: يكون ترتيب العناصر من اليمين إلى اليسار، أول عنصر في أقصى اليمين.",
-        question: "حدد البرنامج الذي يقوم بإخراج: لون التفاح أحمر ، لون الفراولة أحمر",
+        question: "حدد البرنامج الذي يقوم بإخراج: تم قبول الحجز",
         answers: [
-            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits != nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }",
-            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits[i] == nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }",
-            "let fruits = ['التفاح', 'الفراولة', 'البرتقال']; let nonRed = 'البرتقال'; for(let i=0; i<fruits.length; i++){ if(fruits[i] != nonRed){ console.log('لون '+fruits[i]+' أحمر'); } }"
+            "let guests = ['يومي', 'ميكا', 'ماي', 'ريكو', 'كين', 'ناوبا']; let restaurantStatus = 'مفتوح'; if ((guests.length > 7) || (restaurantStatus == 'مفتوح')) { console.log('تم قبول الحجز'); }",
+            "let guests = ['يومي', 'ميكا', 'ماي', 'ريكو', 'كين', 'ناوبا']; let restaurantStatus = 'مغلق'; if ((guests > 7) && (restaurantStatus == 'مفتوح')) { console.log('تم قبول الحجز'); }",
+            "let guests = ['يومي', 'ميكا', 'ماي', 'ريكو', 'كين', 'ناوبا']; let restaurantStatus = 'مغلق'; if ((guests.length > 7) && (restaurantStatus == 'مفتوح')) { console.log('تم قبول الحجز'); }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الذي يطبع المشروبات التي تتطلب رسوماً إضافية (سموذي ومشروب غازي):",
+        answers: [
+            "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList.length; i++) { if (!((drinkList[i] == 'عصير البرتقال' || drinkList[i] == 'عصير العنب'))) { console.log(drinkList[i] + ' : برسوم إضافية '); } }",
+            "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList; i++) { if (!((drinkList[i] == 'عصير البرتقال' || drinkList[i] == 'عصير العنب'))) { console.log(drinkList[i] + ' : برسوم إضافية '); } }",
+            "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList.length; i++) { if (drinkList[i] == 'عصير البرتقال') { console.log(drinkList[i] + ' : برسوم إضافية '); } }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الصحيح الذي يستخدم for loop لطباعة انتهاء الحصص:",
+        answers: [
+            "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; for (let i = 0; i < timetable.length; i++) { console.log('انتهت حصة ' + timetable[i]); }",
+            "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; if (let i = 0; i < timetable; i++) { console.log('انتهت حصة ' + timetable[i]); }",
+            "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; if (let i = 0; i < timetable.length; i++) { console.log('انتهت حصة ' + timetable[i]); }",
+            "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; for (let i = 0; i < timetable; i++) { console.log('انتهت حصة ' + timetable[i]); }"
+        ],
+        correct: 0
+    },
+    {
+        question: "حدد البرنامج الذي يطبع 'برسوم إضافية' للسلطات وشوربة البصل معاً:",
+        answers: [
+            "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for { if ((mealList[i] == 'شوربة البصل') && (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
+            "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for (let i = 0; i < mealList.length; i++) { if ((mealList[i] == 'شوربة البصل') && (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
+            "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for (let i = 0; i < mealList.length; i++) { if ((mealList[i] == 'شوربة البصل') || (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
+            "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for { if ((mealList[i] == 'شوربة البصل') || (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }"
         ],
         correct: 2
     },
     {
-        question: "حدد البرنامج الذي يخرج التحقق من دول أفريقيا (كينيا ومصر دول أفريقية):",
+        question: "حدد البرنامج الذي يطبع 'اشتريت جهازًا لوحيًا' عند توفر الميزانية ومطابقة النوع:",
         answers: [
-            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries == af) || (countries == af)){ console.log(countries[i]+' دول أفريقية'); } }",
-            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries[i] == af[0]) && (countries[i] == af[1])){ console.log(countries[i]+' دولة أفريقية'); } }",
-            "let countries = ['أستراليا', 'مصر', 'البرازيل', 'كينيا']; let af = ['مصر', 'كينيا']; for(let i=0; i<4; i++){ if((countries[i] == af[0]) || (countries[i] == af[1])){ console.log(countries[i]+' دولة أفريقية'); } else { console.log(countries[i]+' ليست أفريقية'); } }"
+            "let electronicDevices = ['شاشة', 'جهازًا لوحيًا', 'حاسوبًا محمولاً']; let wantedDevice = 'جهازًا لوحيًا'; let walletAmount = 50000; let deviceSalePrice = 30000; for (let i = 0; i < electronicDevices.length; i++) { if ((electronicDevices[i] == wantedDevice) && (walletAmount >= deviceSalePrice)) { console.log('اشتريت ' + wantedDevice); } }",
+            "let electronicDevices = ['شاشة', 'جهازًا لوحيًا', 'حاسوبًا محمولاً']; let wantedDevice = 'جهازًا لوحيًا'; let walletAmount = 50000; let deviceSalePrice = 30000; for (let i = 0; i < electronicDevices.length; i++) { if ((electronicDevices[i] == wantedDevice) || (walletAmount >= deviceSalePrice)) { console.log('اشتريت ' + wantedDevice); } }"
         ],
-        correct: 2
-    },
-    {
-        question: "حدد البرنامج الذي يطبع القائمة باستثناء 'سوشي':",
-        answers: [
-            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(menu == 'سوشي'){ console.log(menu[i]); } }",
-            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(!(menu[i] == 'سوشي')){ console.log(menu[i]); } }",
-            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(menu[i] == 'سوشي'){ console.log(menu[i]); } }",
-            "let menu = ['برغر', 'سوشي', 'رامن', 'باستا']; for(let i=0; i<4; i++){ if(!(menu == 'سوشي')){ console.log(menu[i]); } }"
-        ],
-        correct: 1
-    },
-    {
-        question: "حدد البرنامج الذي يطبع 'سأشتري' متبوعاً بكل صنف من الخضروات:",
-        answers: [
-            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg; i++){ console.log('سأشتري '+veg[i]); }",
-            "let veg = ['الملفوف', 'الطماطم', 'الخس']; if(let i=0; i<veg; i++){ console.log('سأشتري '+veg[i]); }",
-            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg.length; i++){ console.log('سأشتري '+veg[i]); }",
-            "let veg = ['الملفوف', 'الطماطم', 'الخس']; for(let i=0; i<veg.length; i++){ console.log('سأشتري '+veg); }"
-        ],
-        correct: 2
+        correct: 0
     }
-];
-
-let current = 0;
-let userAnswers = new Array(questions.length).fill(null);
-
-function renderSidebar(){
-    const list = document.getElementById("questionsList");
-    list.innerHTML = "";
-    questions.forEach((q, index) => {
-        const item = document.createElement("div");
-        item.className = `question-item ${index === current ? "active" : ""} ${userAnswers[index] !== null ? "answered" : ""}`;
-        item.innerHTML = `<span>سؤال ${index + 1}</span> ${userAnswers[index] !== null ? '✓' : ''}`;
-        item.onclick = () => loadQuestion(index);
-        list.appendChild(item);
-    });
-}
-
-function loadQuestion(index){
-    current = index;
-    const q = questions[index];
-    
-    document.getElementById("currentQuestionNum").innerText = index + 1;
-    document.getElementById("totalQuestionsNum").innerText = questions.length;
-    document.getElementById("questionText").innerText = q.question;
-    
-    const noteArea = document.getElementById("noteArea");
-    if(q.note) {
-        noteArea.innerHTML = `<div class="note-box"><strong>ملاحظة:</strong> ${q.note}</div>`;
-    } else {
-        noteArea.innerHTML = "";
-    }
-
-    const codeBox = document.getElementById("codeBox");
-    if(q.code) {
-        codeBox.innerText = q.code;
-        codeBox.style.display = "block";
-    } else {
-        codeBox.style.display = "none";
-    }
-
-    const answersBox = document.getElementById("answersBox");
-    answersBox.innerHTML = "";
-
-    q.answers.forEach((ans, i) => {
-        const div = document.createElement("div");
-        div.className = `answer ${userAnswers[current] === i ? "selected" : ""}`;
-        div.innerText = ans;
-        div.onclick = function(){
-            userAnswers[current] = i;
-            loadQuestion(current);
-        };
-        answersBox.appendChild(div);
-    });
-    renderSidebar();
-}
-
-function nextQuestion(){
-    if(current < questions.length - 1) loadQuestion(current + 1);
-    else alert("لقد وصلت لنهاية الأسئلة، اضغط 'إنهاء' لرؤية النتيجة.");
-}
-
-function finishExam(){
-    let unanswered = userAnswers.filter(a => a === null).length;
-    let msg = unanswered > 0 ? `لديك ${unanswered} سؤال لم تجب عليه. هل تريد الإنهاء؟` : "هل أنت متأكد من إنهاء الاختبار؟";
-    
-    if(confirm(msg)){
-        let score = 0;
-        userAnswers.forEach((ans, index) => {
-            if(ans === questions[index].correct) score++;
-        });
-
-        const quizArea = document.getElementById("quizArea");
-        const percent = Math.round((score/questions.length)*100);
-        
-        quizArea.innerHTML = `
-            <div style="text-align:center; padding: 40px;">
-                <h1 style="color:#1f4fa3; font-size:36px;">انتهى الاختبار</h1>
-                <div style="font-size:80px; margin:20px 0;">${percent >= 50 ? '🏆' : '📚'}</div>
-                <p style="font-size:24px;">نتيجتك هي: <strong>${score}</strong> من <strong>${questions.length}</strong></p>
-                <p style="font-size:20px; color:#666;">النسبة المئوية: ${percent}%</p>
-                <button class="btn" style="margin-top:30px; padding:15px 40px;" onclick="location.reload()">إعادة المحاولة</button>
-            </div>
-        `;
-        clearInterval(timerInterval);
-    }
-}
-
-let seconds = 1800;
-const timerInterval = setInterval(()=>{
-    let min = Math.floor(seconds / 60);
-    let sec = seconds % 60;
-    document.getElementById("timer").innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
-    if(seconds <= 0) {
-        clearInterval(timerInterval);
-        finishExam();
-    }
-    seconds--;
-},1000);
-
-loadQuestion(0);
-</script>
+];      
 
 </body>
 </html>

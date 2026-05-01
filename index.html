@@ -180,7 +180,7 @@ body{
 <div class="topbar">
     <div class="title">اختبار البرمجة الذكي</div>
     <div class="info">
-        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">19</span></span>
+        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">20</span></span>
         <span>الوقت: <span id="timer">30:00</span></span>
         <button class="btn" onclick="nextQuestion()">السؤال التالي</button>
         <button class="btn btn-finish" onclick="finishExam()">إنهاء وإظهار النتيجة</button>
@@ -204,8 +204,7 @@ body{
 </div>
 
 <script>
-          const questions = [
-    // ... الأسئلة الـ 14 السابقة التي كانت لديك تظل كما هي ...
+const questions = [
     {
         question: "حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
         code: `let today = "الأربعاء";\nlet specialSalesDay = "الخميس";\nif (today != specialSalesDay) {\n  console.log("اليوم ليس يوم تخفيضات");\n}`,
@@ -335,20 +334,17 @@ body{
         ],
         correct: 1
     },
-
-    // --- الأسئلة الجديدة التي أضفتها أنت ---
-
     {
-        question: "حدد البرنامج الذي يقوم بإخراج جملة خاصة بحصة التربية البدنية فقط عند هطول المطر:",
+        question: "سؤال 20: حدد البرنامج الذي يطبع جملة خاصة بحصة التربية البدنية فقط عند هطول المطر:",
         answers: [
-            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') || (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }",
-            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') && (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }",
-            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'مشمس'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') && (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ' + tomorrowWeather + ' لذا ستقام حصة ' + timetable[i] + ' في الصالة الرياضية'); } }"
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') || (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس...'); } }",
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'ماطراً'; for (let i = 0; i < timetable.length; i++) { if ((tomorrowWeather == 'ماطراً') && (timetable[i] == 'التربية البدنية')) { console.log('سيكون الطقس غداً ماطراً لذا ستقام حصة التربية البدنية في الصالة الرياضية'); } }",
+            "let timetable = ['اللغة اليابانية', 'العلوم', 'الدراسات الاجتماعية', 'التربية البدنية']; let tomorrowWeather = 'صحو'; if (tomorrowWeather == 'ماطراً') { console.log(timetable); }"
         ],
         correct: 1
     },
     {
-        question: "حدد البرنامج الذي يقوم بإخراج: تم قبول الحجز",
+        question: "سؤال 21: حدد البرنامج الذي يقوم بإخراج: تم قبول الحجز",
         answers: [
             "let guests = ['يومي', 'ميكا', 'ماي', 'ريكو', 'كين', 'ناوبا']; let restaurantStatus = 'مفتوح'; if ((guests.length > 7) || (restaurantStatus == 'مفتوح')) { console.log('تم قبول الحجز'); }",
             "let guests = ['يومي', 'ميكا', 'ماي', 'ريكو', 'كين', 'ناوبا']; let restaurantStatus = 'مغلق'; if ((guests > 7) && (restaurantStatus == 'مفتوح')) { console.log('تم قبول الحجز'); }",
@@ -357,43 +353,142 @@ body{
         correct: 0
     },
     {
-        question: "حدد البرنامج الذي يطبع المشروبات التي تتطلب رسوماً إضافية (سموذي ومشروب غازي):",
+        question: "سؤال 22: حدد البرنامج الذي يطبع 'برسوم إضافية' للسموذي والمشروب الغازي فقط:",
         answers: [
             "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList.length; i++) { if (!((drinkList[i] == 'عصير البرتقال' || drinkList[i] == 'عصير العنب'))) { console.log(drinkList[i] + ' : برسوم إضافية '); } }",
             "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList; i++) { if (!((drinkList[i] == 'عصير البرتقال' || drinkList[i] == 'عصير العنب'))) { console.log(drinkList[i] + ' : برسوم إضافية '); } }",
-            "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; for (let i = 0; i < drinkList.length; i++) { if (drinkList[i] == 'عصير البرتقال') { console.log(drinkList[i] + ' : برسوم إضافية '); } }"
+            "let drinkList = ['عصير البرتقال', 'عصير العنب', 'سموذي', 'مشروب غازي']; if(drinkList == 'سموذي') { console.log('برسوم إضافية'); }"
         ],
         correct: 0
     },
     {
-        question: "حدد البرنامج الصحيح الذي يستخدم for loop لطباعة انتهاء الحصص:",
+        question: "سؤال 23: حدد البرنامج الصحيح لطباعة 'انتهت حصة...' لجميع عناصر المصفوفة:",
         answers: [
             "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; for (let i = 0; i < timetable.length; i++) { console.log('انتهت حصة ' + timetable[i]); }",
             "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; if (let i = 0; i < timetable; i++) { console.log('انتهت حصة ' + timetable[i]); }",
-            "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; if (let i = 0; i < timetable.length; i++) { console.log('انتهت حصة ' + timetable[i]); }",
             "let timetable = ['العلوم', 'الرياضيات', 'الدراسات الاجتماعية', 'اللغة الإنجليزية']; for (let i = 0; i < timetable; i++) { console.log('انتهت حصة ' + timetable[i]); }"
         ],
         correct: 0
     },
     {
-        question: "حدد البرنامج الذي يطبع 'برسوم إضافية' للسلطات وشوربة البصل معاً:",
+        question: "سؤال 24: حدد البرنامج الذي يطبع 'برسوم إضافية' للسلطات وشوربة البصل:",
         answers: [
-            "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for { if ((mealList[i] == 'شوربة البصل') && (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
             "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for (let i = 0; i < mealList.length; i++) { if ((mealList[i] == 'شوربة البصل') && (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
             "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for (let i = 0; i < mealList.length; i++) { if ((mealList[i] == 'شوربة البصل') || (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }",
             "let mealList = ['خبز', 'سلطات', 'ستيك', 'شوربة البصل']; for { if ((mealList[i] == 'شوربة البصل') || (mealList[i] == 'سلطات')) { console.log(mealList[i] + ': برسوم إضافية'); } }"
         ],
-        correct: 2
+        correct: 1
     },
     {
-        question: "حدد البرنامج الذي يطبع 'اشتريت جهازًا لوحيًا' عند توفر الميزانية ومطابقة النوع:",
+        question: "سؤال 25: حدد البرنامج الذي يطبع 'اشتريت جهازًا لوحيًا' عند مطابقة النوع وتوفر الميزانية:",
         answers: [
-            "let electronicDevices = ['شاشة', 'جهازًا لوحيًا', 'حاسوبًا محمولاً']; let wantedDevice = 'جهازًا لوحيًا'; let walletAmount = 50000; let deviceSalePrice = 30000; for (let i = 0; i < electronicDevices.length; i++) { if ((electronicDevices[i] == wantedDevice) && (walletAmount >= deviceSalePrice)) { console.log('اشتريت ' + wantedDevice); } }",
-            "let electronicDevices = ['شاشة', 'جهازًا لوحيًا', 'حاسوبًا محمولاً']; let wantedDevice = 'جهازًا لوحيًا'; let walletAmount = 50000; let deviceSalePrice = 30000; for (let i = 0; i < electronicDevices.length; i++) { if ((electronicDevices[i] == wantedDevice) || (walletAmount >= deviceSalePrice)) { console.log('اشتريت ' + wantedDevice); } }"
+            "let devices = ['شاشة', 'جهازًا لوحيًا', 'حاسوب']; let wanted = 'جهازًا لوحيًا'; let wall = 50000; let price = 30000; for (let i=0; i<devices.length; i++) { if ((devices[i] == wanted) && (wall >= price)) { console.log('اشتريت ' + wanted); } }",
+            "let devices = ['شاشة', 'جهازًا لوحيًا', 'حاسوب']; let wanted = 'جهازًا لوحيًا'; let wall = 50000; let price = 30000; for (let i=0; i<devices.length; i++) { if ((devices[i] == wanted) || (wall >= price)) { console.log('اشتريت ' + wanted); } }",
+            "let devices = ['شاشة', 'جهازًا لوحيًا', 'حاسوب']; let wanted = 'جهازًا لوحيًا'; if (wanted == devices) { console.log('اشتريت'); }"
         ],
         correct: 0
     }
-];      
+];
+
+let current = 0;
+let userAnswers = new Array(questions.length).fill(null);
+
+function renderSidebar(){
+    const list = document.getElementById("questionsList");
+    list.innerHTML = "";
+    questions.forEach((q, index) => {
+        const item = document.createElement("div");
+        item.className = `question-item ${index === current ? "active" : ""} ${userAnswers[index] !== null ? "answered" : ""}`;
+        item.innerHTML = `<span>سؤال ${index + 1}</span> ${userAnswers[index] !== null ? '✓' : ''}`;
+        item.onclick = () => loadQuestion(index);
+        list.appendChild(item);
+    });
+}
+
+function loadQuestion(index){
+    current = index;
+    const q = questions[index];
+    
+    document.getElementById("currentQuestionNum").innerText = index + 1;
+    document.getElementById("totalQuestionsNum").innerText = questions.length;
+    document.getElementById("questionText").innerText = q.question;
+    
+    const noteArea = document.getElementById("noteArea");
+    if(q.note) {
+        noteArea.innerHTML = `<div class="note-box"><strong>ملاحظة:</strong> ${q.note}</div>`;
+    } else {
+        noteArea.innerHTML = "";
+    }
+
+    const codeBox = document.getElementById("codeBox");
+    if(q.code) {
+        codeBox.innerText = q.code;
+        codeBox.style.display = "block";
+    } else {
+        codeBox.style.display = "none";
+    }
+
+    const answersBox = document.getElementById("answersBox");
+    answersBox.innerHTML = "";
+
+    q.answers.forEach((ans, i) => {
+        const div = document.createElement("div");
+        div.className = `answer ${userAnswers[current] === i ? "selected" : ""}`;
+        div.innerText = ans;
+        div.onclick = function(){
+            userAnswers[current] = i;
+            loadQuestion(current);
+        };
+        answersBox.appendChild(div);
+    });
+    renderSidebar();
+}
+
+function nextQuestion(){
+    if(current < questions.length - 1) loadQuestion(current + 1);
+    else alert("لقد وصلت لنهاية الأسئلة، اضغط 'إنهاء' لرؤية النتيجة.");
+}
+
+function finishExam(){
+    let unanswered = userAnswers.filter(a => a === null).length;
+    let msg = unanswered > 0 ? `لديك ${unanswered} سؤال لم تجب عليه. هل تريد الإنهاء؟` : "هل أنت متأكد من إنهاء الاختبار؟";
+    
+    if(confirm(msg)){
+        let score = 0;
+        userAnswers.forEach((ans, index) => {
+            if(ans === questions[index].correct) score++;
+        });
+
+        const quizArea = document.getElementById("quizArea");
+        const percent = Math.round((score/questions.length)*100);
+        
+        quizArea.innerHTML = `
+            <div style="text-align:center; padding: 40px;">
+                <h1 style="color:#1f4fa3; font-size:36px;">انتهى الاختبار</h1>
+                <div style="font-size:80px; margin:20px 0;">${percent >= 50 ? '🏆' : '📚'}</div>
+                <p style="font-size:24px;">نتيجتك هي: <strong>${score}</strong> من <strong>${questions.length}</strong></p>
+                <p style="font-size:20px; color:#666;">النسبة المئوية: ${percent}%</p>
+                <button class="btn" style="margin-top:30px; padding:15px 40px;" onclick="location.reload()">إعادة المحاولة</button>
+            </div>
+        `;
+        clearInterval(timerInterval);
+    }
+}
+
+let seconds = 1800;
+const timerInterval = setInterval(()=>{
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+    document.getElementById("timer").innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
+    if(seconds <= 0) {
+        clearInterval(timerInterval);
+        finishExam();
+    }
+    seconds--;
+},1000);
+
+loadQuestion(0);
+</script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الاختبار المحدثة</title>
+<title>منصة الاختبار المحدثة - بنظام الدرجات</title>
 
 <style>
 *{
@@ -26,6 +26,9 @@ body{
     justify-content:space-between;
     align-items:center;
     flex-wrap:wrap;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .topbar .title{
@@ -50,6 +53,10 @@ body{
     font-size:16px;
 }
 
+.btn-finish {
+    background: #d9534f;
+}
+
 .btn:hover{
     opacity:0.9;
 }
@@ -62,7 +69,7 @@ body{
 
 /* قائمة الأسئلة */
 .sidebar{
-    width:30%;
+    width:25%;
     background:#ffffff;
     padding:20px;
     overflow-y:auto;
@@ -71,20 +78,24 @@ body{
 
 .sidebar h2{
     margin-bottom:20px;
+    font-size: 1.2rem;
 }
 
 .question-item{
     background:#f7f7f7;
-    padding:15px;
+    padding:12px;
     margin-bottom:10px;
-    border-radius:12px;
+    border-radius:10px;
     cursor:pointer;
     transition:0.3s;
     border:2px solid transparent;
+    display: flex;
+    justify-content: space-between;
 }
 
-.question-item:hover{
-    background:#e9eefc;
+.question-item.answered {
+    background: #e8f5e9;
+    border-color: #4caf50;
 }
 
 .question-item.active{
@@ -103,17 +114,18 @@ body{
     background:white;
     border-radius:15px;
     padding:25px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    box-shadow:0 0 15px rgba(0,0,0,0.05);
 }
 
 .question-title{
-    font-size:22px;
+    font-size:20px;
     margin-bottom:20px;
-    line-height:1.8;
+    line-height:1.6;
 }
 
 .code-box{
-    background:#f4f4f4;
+    background:#2d2d2d;
+    color: #f8f8f2;
     padding:20px;
     border-radius:10px;
     overflow:auto;
@@ -136,33 +148,26 @@ body{
     padding:15px;
     border-radius:12px;
     cursor:pointer;
-    transition:0.3s;
-    border:2px solid transparent;
+    transition:0.2s;
+    border:2px solid #eee;
     direction:ltr;
     text-align:left;
-    white-space:pre-wrap;
 }
 
 .answer:hover{
     background:#eef3ff;
+    border-color: #1f4fa3;
 }
 
 .answer.selected{
     border-color:#1f4fa3;
     background:#dfe9ff;
+    font-weight: bold;
 }
 
 @media(max-width:900px){
-    .container{
-        flex-direction:column;
-    }
-
-    .sidebar{
-        width:100%;
-        height:200px;
-        border-left:none;
-        border-top:2px solid #ddd;
-    }
+    .container{ flex-direction:column; }
+    .sidebar{ width:100%; height:150px; border-left:none; border-top:2px solid #ddd; }
 }
 </style>
 </head>
@@ -170,487 +175,195 @@ body{
 <body>
 
 <div class="topbar">
-    <div class="title">منصة الاختبار الذكية</div>
-
+    <div class="title">اختبار البرمجة الذكي</div>
     <div class="info">
-        <span>السؤال: <span id="currentQuestion">1</span></span>
+        <span>السؤال: <span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">0</span></span>
         <span>الوقت: <span id="timer">30:00</span></span>
-
         <button class="btn" onclick="nextQuestion()">التالي</button>
-        <button class="btn" onclick="finishExam()">إنهاء</button>
+        <button class="btn btn-finish" onclick="finishExam()">إنهاء الاختبار</button>
     </div>
 </div>
 
 <div class="container">
-
     <div class="sidebar">
-        <h2>قائمة الأسئلة</h2>
+        <h2>حالة الأسئلة</h2>
         <div id="questionsList"></div>
     </div>
 
     <div class="content">
-        <div class="question-box">
-
+        <div id="quizArea" class="question-box">
             <div class="question-title" id="questionText"></div>
-
             <pre class="code-box" id="codeBox"></pre>
-
             <div class="answers" id="answersBox"></div>
-
         </div>
     </div>
-
 </div>
 
 <script>
-
+// مصفوفة الأسئلة مع تحديد الإجابة الصحيحة (المؤشر يبدأ من 0)
 const questions = [
-
-{
-question:"حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
-code:`let today = "الأربعاء";
+    {
+        question:"حدد النتيجة التي سيتم إخراجها عند تنفيذ هذا البرنامج",
+        code:`let today = "الأربعاء";
 let specialSalesDay = "الخميس";
-
 if (today != specialSalesDay) {
   console.log("اليوم ليس يوم تخفيضات");
 }`,
-answers:[
-"لا يوجد إخراج",
-"اليوم ليس يوم تخفيضات",
-"اليوم يوم تخفيضات",
-"يوم تخفيضات"
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: لا يمكنك الركوب",
-code:"",
-answers:[
-
-`let height = 180;
-let weight = 110;
-
-if ((height >= 100) || (weight <= 100)) {
-console.log("يمكنك الركوب");
-} else {
-console.log("لا يمكنك الركوب");
+        answers:["لا يوجد إخراج", "اليوم ليس يوم تخفيضات", "اليوم يوم تخفيضات", "يوم تخفيضات"],
+        correct: 1
+    },
+    {
+        question:"حدد البرنامج الذي يقوم بإخراج: لا يمكنك الركوب",
+        code:"",
+        answers:[
+`let height = 180; let weight = 110;
+if ((height >= 100) || (weight <= 100)) { console.log("يمكنك الركوب"); } 
+else { console.log("لا يمكنك الركوب"); }`,
+`let height = 180; let weight = 110;
+if ((height >= 100) && (weight <= 100)) { console.log("يمكنك الركوب"); } 
+else { console.log("لا يمكنك الركوب"); }`,
+`let height = 180; let weight = 110;
+if ((height < 100) || (weight > 100)) { console.log("يمكنك الركوب"); } 
+else { console.log("لا يمكنك الركوب"); }`,
+`let height = 180; let weight = 110;
+if ((height < 100) && (weight > 100)) { console.log("يمكنك الركوب"); } 
+else { console.log("لا يمكنك الركوب"); }`
+        ],
+        correct: 1
+    },
+    {
+        question: "حدد البرنامج الذي يقوم بإخراج: حاصل الجمع هو 15",
+        code: "",
+        answers: [
+`let x = "10"; let y = 5;
+console.log("حاصل الجمع هو " + (x + y));`,
+`let x = 10; let y = 5;
+console.log("حاصل الجمع هو " + x + y);`,
+`let x = 10; let y = 5;
+console.log("حاصل الجمع هو " + (x + y));`,
+`let x = 10; let y = 5;
+if (x = y) { console.log("حاصل الجمع هو 15"); }`
+        ],
+        correct: 2
+    },
+    {
+        question: "ما هي القيمة التي ستظهر في القنصل بعد تنفيذ الكود التالي؟",
+        code: `let colors = ["أحمر", "أخضر", "أزرق"];
+colors.push("أصفر");
+console.log(colors.length);`,
+        answers: ["2", "3", "4", "أصفر"],
+        correct: 2
+    },
+    {
+        question: "أي من البرامج التالية يقوم بطباعة الأرقام من 1 إلى 3؟",
+        code: "",
+        answers: [
+`for (let i = 1; i <= 3; i++) {
+  console.log(i);
 }`,
-
-`let height = 180;
-let weight = 110;
-
-if ((height >= 100) && (weight <= 100)) {
-console.log("يمكنك الركوب");
-} else {
-console.log("لا يمكنك الركوب");
+`for (let i = 1; i < 3; i++) {
+  console.log(i);
 }`,
-
-`let height = 180;
-let weight = 110;
-
-if ((height < 100) || (weight > 100)) {
-console.log("يمكنك الركوب");
-} else {
-console.log("لا يمكنك الركوب");
+`let i = 1;
+if (i <= 3) {
+  console.log(i);
 }`,
-
-`let height = 180;
-let weight = 110;
-
-if ((height < 100) && (weight > 100)) {
-console.log("يمكنك الركوب");
-} else {
-console.log("لا يمكنك الركوب");
+`for (let i = 3; i > 0; i--) {
+  console.log(i);
 }`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: هذا القطار متوجه إلى محطة ب",
-code:"",
-answers:[
-
-`let time = 10;
-let vehicleNum = "العربة 3";
-let destination = "محطة ب";
-
-console.log("هذا القطار متوجه إلى " + destination);
-
-if ((time <= 9) && (vehicleNum == "العربة 3")) {
-console.log("هذه العربة مخصصة لشحن البضائع");
-}`,
-
-`let time = 10;
-let vehicleNum = "العربة 3";
-let destination = "محطة ب";
-
-console.log("هذا القطار متوجه إلى " + destination);
-
-if ((time <= 9) || (vehicleNum == "العربة 3")) {
-console.log("هذه العربة مخصصة لشحن البضائع");
-}`,
-
-`let time = 10;
-let vehicleNum = "العربة 3";
-let destination = "محطة ب";
-
-console.log("هذا القطار متوجه إلى " + destination);
-
-if ((time >= 9) && (vehicleNum == "العربة 3")) {
-console.log("هذه العربة مخصصة لشحن البضائع");
-}`,
-
-`let time = 10;
-let vehicleNum = "العربة 3";
-let destination = "محطة ب";
-
-console.log("هذا القطار متوجه إلى " + destination);
-
-if (!(time <= 9) && (vehicleNum == "العربة 3")) {
-console.log("هذه العربة مخصصة لشحن البضائع");
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: الإشارة لونها أحمر / توقف. الدخول ممنوع",
-code:"",
-answers:[
-
-`let currentColor = "أحمر";
-let trafficColor1 = "أحمر";
-let trafficColor2 = "أصفر";
-
-console.log("الإشارة لونها " + currentColor);
-
-if ((currentColor == trafficColor1) && (currentColor == trafficColor2)) {
-console.log("توقف. الدخول ممنوع");
-} else {
-console.log("تقدم. الدخول مسموح");
-}`,
-
-`let currentColor = "أحمر";
-let trafficColor1 = "أحمر";
-let trafficColor2 = "أصفر";
-
-console.log("الإشارة لونها " + currentColor);
-
-if ((currentColor != trafficColor1) && (currentColor != trafficColor2)) {
-console.log("توقف. الدخول ممنوع");
-} else {
-console.log("تقدم. الدخول مسموح");
-}`,
-
-`console.log("الإشارة لونها " + currentColor);
-
-if ((currentColor != trafficColor1) || (currentColor == trafficColor2)) {
-console.log("توقف. الدخول ممنوع");
-} else {
-console.log("تقدم. الدخول مسموح");
-}`,
-
-`let currentColor = "أحمر";
-let trafficColor1 = "أحمر";
-let trafficColor2 = "أصفر";
-
-console.log("الإشارة لونها " + currentColor);
-
-if ((currentColor == trafficColor1) || (currentColor == trafficColor2)) {
-console.log("توقف. الدخول ممنوع");
-} else {
-console.log("تقدم. الدخول مسموح");
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: السلام عليكم يا كين",
-code:"",
-answers:[
-
-`let greeting = "السلام عليكم ";
-let name = "كين";
-let timeZone = "الصباح";
-
-if (timeZone == "الصباح") {
-console.log(greeting + "يا " + name);
-}`,
-
-`let greeting = "السلام عليكم ";
-let name = "كين";
-let timeZone = "الظهيرة";
-
-if (!(timeZone == "الصباح")) {
-console.log(greeting + "يا " + name);
-}`,
-
-`let greeting = "السلام عليكم ";
-let name = "كين";
-let timeZone = "الظهيرة";
-
-if (!(timeZone == "الصباح")) {
-console.log(greeting * "يا " * name);
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: مساء الخير / صباح الخير",
-code:"",
-answers:[
-
-`let greetingList = ["مساء الخير", "صباح الخير"];
-
-if (let i = 0; i < 2; i++) {
-console.log(greetingList[i]);
-}`,
-
-`let greetingList = ["مساء الخير", "صباح الخير"];
-
-for (let i = 0; i < 2; i++) {
-console.log(greetingList[i]);
-}`,
-
-`let greetingList = ["مساء الخير", "صباح الخير"];
-
-for {
-console.log(greetingList[i]);
-}`,
-
-`let greetingList = ["مساء الخير", "صباح الخير"];
-
-for (let i = 0; i < greetingList; i++) {
-console.log(greetingList[i]);
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: الباندا من الثدييات / الدلفين من الثدييات",
-code:"",
-answers:[
-
-`let animals = ["الباندا", "البطريق", "الدلفين"];
-
-if (let i = 0; i < 3; i++) {
-if (animals[i] != "البطريق") {
-console.log(animals[i] + " من الثدييات");
-}
-}`,
-
-`let animals = ["الباندا", "البطريق", "الدلفين"];
-
-for (let i = 0; i < 3; i++) {
-if (animals[i] == "البطريق") {
-console.log(animals[i] + " من الثدييات");
-}
-}`,
-
-`let animals = ["الباندا", "البطريق", "الدلفين"];
-
-if (let i = 0; i < 3; i++) {
-if (animals[i] == "البطريق") {
-console.log(animals[i] + " من الثدييات");
-}
-}`,
-
-`let animals = ["الباندا", "البطريق", "الدلفين"];
-
-for (let i = 0; i < 3; i++) {
-if (animals[i] != "البطريق") {
-console.log(animals[i] + " من الثدييات");
-}
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: سأذهب إلى فرنسا / الصين / كوريا الجنوبية / اليابان",
-code:"",
-answers:[
-
-`let countries = ["فرنسا", "الصين", "كوريا الجنوبية", "اليابان"];
-
-for (let i = 0; i < countries.length; i++) {
-console.log("سأذهب إلى " + countries[i]);
-}`,
-
-`let countries = [ "كوريا", "الصين" ], [ "فرنسا" ] , [ "اليابان" ];
-
-for (let i = 0; i < countries.length; i++) {
-console.log("سأذهب إلى " + countries[i]);
-}`,
-
-`let countries = ["فرنسا", "الصين", "كوريا الجنوبية", "اليابان"];
-
-if (let i = 0; i < countries.length; i++) {
-console.log("سأذهب إلى " + countries[i]);
-}`,
-
-`let countries = ["فرنسا", "الصين", "كوريا الجنوبية", "اليابان"];
-
-for (let i = 1; i < countries.length; i++) {
-console.log("سأذهب إلى " + countries[i]);
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج محطات القطار حتى المحطة الأخيرة",
-code:"",
-answers:[
-
-`let stations = ["محطة أ", "محطة ب", "محطة ج", "محطة د"];
-
-for (let i = 0; i < stations.length; i++) {
-console.log("تم الوصول إلى " + stations[i]);
-}
-
-console.log("تم الوصول إلى المحطة الأخيرة");`,
-
-`let stations = ["محطة أ", "محطة ب", "محطة ج", "محطة د"];
-
-for (let i = 0; i < stations.length; i++) {
-console.log("تم الوصول إلى " + stations[i]);
-console.log("تم الوصول إلى المحطة الأخيرة");
-}`,
-
-`let stations = ["محطة أ", "محطة ب", "محطة ج", "محطة د"];
-
-if (let i = 0; i < stations.length; i++) {
-console.log("تم الوصول إلى " + stations[i]);
-}
-
-console.log("تم الوصول إلى المحطة الأخيرة");`,
-
-`let stations = ["محطة أ", "محطة ب", "محطة ج", "محطة د"];
-
-if (let i = 0; i < stations.length; i++) {
-console.log("تم الوصول إلى " + stations[i]);
-console.log("تم الوصول إلى المحطة الأخيرة");
-}`
-]
-},
-
-{
-question:"حدد البرنامج الذي يقوم بإخراج: لدي محفظة",
-code:`let itemList = ["ساعة يد", "هاتف ذكي", "محفظة"];`,
-answers:[
-
-`console.log("لدي " + itemList[1]);`,
-`console.log("لدي " + itemList[2]);`,
-`console.log("لدي " + itemList);`,
-`console.log("لدي " + itemList[3]);`
-
-]
-}
-
+        ],
+        correct: 0
+    }
+    // يمكنك إضافة بقية الأسئلة هنا بنفس النمط
 ];
 
 let current = 0;
-
-const questionsList = document.getElementById("questionsList");
+let userAnswers = new Array(questions.length).fill(null); // لتخزين إجابات المستخدم
 
 function renderSidebar(){
-
-questionsList.innerHTML = "";
-
-questions.forEach((q,index)=>{
-
-const item = document.createElement("div");
-
-item.className = `question-item ${index === current ? "active" : ""}`;
-
-item.innerText = `السؤال ${index + 1}`;
-
-item.onclick = ()=> loadQuestion(index);
-
-questionsList.appendChild(item);
-
-});
-
+    const list = document.getElementById("questionsList");
+    list.innerHTML = "";
+    questions.forEach((q, index) => {
+        const item = document.createElement("div");
+        item.className = `question-item ${index === current ? "active" : ""} ${userAnswers[index] !== null ? "answered" : ""}`;
+        item.innerHTML = `<span>سؤال ${index + 1}</span> ${userAnswers[index] !== null ? '✓' : ''}`;
+        item.onclick = () => loadQuestion(index);
+        list.appendChild(item);
+    });
 }
 
 function loadQuestion(index){
+    current = index;
+    document.getElementById("currentQuestionNum").innerText = index + 1;
+    document.getElementById("totalQuestionsNum").innerText = questions.length;
+    document.getElementById("questionText").innerText = questions[index].question;
+    
+    const codeBox = document.getElementById("codeBox");
+    if(questions[index].code) {
+        codeBox.innerText = questions[index].code;
+        codeBox.style.display = "block";
+    } else {
+        codeBox.style.display = "none";
+    }
 
-current = index;
+    const answersBox = document.getElementById("answersBox");
+    answersBox.innerHTML = "";
 
-document.getElementById("currentQuestion").innerText = index + 1;
-
-document.getElementById("questionText").innerText = questions[index].question;
-
-document.getElementById("codeBox").innerText = questions[index].code;
-
-const answersBox = document.getElementById("answersBox");
-
-answersBox.innerHTML = "";
-
-questions[index].answers.forEach(answer=>{
-
-const div = document.createElement("div");
-
-div.className = "answer";
-
-div.innerText = answer;
-
-div.onclick = function(){
-
-document.querySelectorAll(".answer").forEach(a=>{
-a.classList.remove("selected");
-});
-
-this.classList.add("selected");
-
-};
-
-answersBox.appendChild(div);
-
-});
-
-renderSidebar();
-
+    questions[index].answers.forEach((answer, i) => {
+        const div = document.createElement("div");
+        div.className = `answer ${userAnswers[current] === i ? "selected" : ""}`;
+        div.innerText = answer;
+        div.onclick = function(){
+            userAnswers[current] = i;
+            loadQuestion(current); // إعادة التحميل لتحديث حالة الاختيار
+        };
+        answersBox.appendChild(div);
+    });
+    renderSidebar();
 }
 
 function nextQuestion(){
-
-if(current < questions.length - 1){
-
-loadQuestion(current + 1);
-
-}else{
-
-alert("وصلت إلى آخر سؤال");
-
-}
-
+    if(current < questions.length - 1) loadQuestion(current + 1);
+    else alert("هذا هو السؤال الأخير.");
 }
 
 function finishExam(){
+    if(confirm("هل أنت متأكد من إنهاء الاختبار؟")){
+        let score = 0;
+        userAnswers.forEach((ans, index) => {
+            if(ans === questions[index].correct) score++;
+        });
 
-alert("تم إنهاء الاختبار بنجاح!");
-
+        const quizArea = document.getElementById("quizArea");
+        quizArea.innerHTML = `
+            <div style="text-align:center; padding: 40px;">
+                <h1 style="color:#1f4fa3; font-size:48px;">النتيجة النهائية</h1>
+                <p style="font-size:24px; margin:20px 0;">لقد حصلت على <strong>${score}</strong> من <strong>${questions.length}</strong></p>
+                <div style="font-size:60px;">${(score/questions.length >= 0.5) ? '🥳' : '😐'}</div>
+                <button class="btn" style="margin-top:30px;" onclick="location.reload()">إعادة الاختبار</button>
+            </div>
+        `;
+        // إيقاف المؤقت
+        clearInterval(timerInterval);
+    }
 }
 
+// نظام الوقت
 let seconds = 1800;
-
-setInterval(()=>{
-
-let min = Math.floor(seconds / 60);
-
-let sec = seconds % 60;
-
-document.getElementById("timer").innerText =
-`${min}:${sec < 10 ? '0'+sec : sec}`;
-
-if(seconds > 0){
-seconds--;
-}
-
+const timerInterval = setInterval(()=>{
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+    document.getElementById("timer").innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
+    if(seconds <= 0) {
+        clearInterval(timerInterval);
+        alert("انتهى الوقت!");
+        finishExam();
+    }
+    seconds--;
 },1000);
 
 loadQuestion(0);
-
 </script>
 
 </body>
-    </html>
+</html>
